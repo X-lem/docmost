@@ -16,7 +16,8 @@ import {
   IconPhoto,
   IconTable,
   IconTypography,
-  IconMenu4
+  IconMenu4,
+  IconLink,
 } from "@tabler/icons-react";
 import {
   CommandProps,
@@ -28,6 +29,8 @@ import { uploadAttachmentAction } from "@/features/editor/components/attachment/
 import IconExcalidraw from "@/components/icons/icon-excalidraw";
 import IconMermaid from "@/components/icons/icon-mermaid";
 import IconDrawio from "@/components/icons/icon-drawio";
+import { openPageMenu } from "./page-link-modal";
+import { getPageById } from "@/features/page/services/page-service";
 
 const CommandGroups: SlashMenuGroupedItemsType = {
   basic: [
@@ -43,6 +46,29 @@ const CommandGroups: SlashMenuGroupedItemsType = {
           .deleteRange(range)
           .toggleNode("paragraph", "paragraph")
           .run();
+      },
+    },
+    {
+      title: "Link to page",
+      description: "Link to an existing page.",
+      searchTerms: ["link", "internal link", "page"],
+      icon: IconLink,
+      command: async ({ editor, range }: CommandProps) => {
+        openPageMenu(
+          "0191ed20-3dc5-7a31-880e-fd6332aa5372", // TODO: get spaceId dynamically
+          (selectedPageId: string) => {
+            console.log("selectedPageId", selectedPageId);
+            editor
+              .chain()
+              .focus()
+              .deleteRange(range)
+              .setLinkInternal({
+                pageId: selectedPageId,
+                getPageById: getPageById,
+              })
+              .run();
+          }
+        );
       },
     },
     {
@@ -315,7 +341,7 @@ const CommandGroups: SlashMenuGroupedItemsType = {
           .run(),
     },
     {
-      title: "Draw.io (diagrams.net) ",
+      title: "Draw.io (diagrams.net)",
       description: "Insert and design Drawio diagrams",
       searchTerms: ["drawio", "diagrams", "charts", "uml", "whiteboard"],
       icon: IconDrawio,

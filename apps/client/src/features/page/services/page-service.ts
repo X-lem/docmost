@@ -21,6 +21,13 @@ export async function getPageById(
   return req.data;
 }
 
+export async function getPageTitles(
+  spaceId?: string,
+): Promise<Partial<IPage>[]> {
+  const req = await api.post<Partial<IPage>[]>("/pages/titles", { spaceId });
+  return req.data;
+}
+
 export async function updatePage(data: Partial<IPageInput>): Promise<IPage> {
   const req = await api.post<IPage>("/pages/update", data);
   return req.data;

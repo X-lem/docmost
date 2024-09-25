@@ -33,6 +33,7 @@ import {
   Selection,
   Attachment,
   CustomCodeBlock,
+  LinkInternal,
   Drawio,
   Excalidraw,
 } from "@docmost/editor-ext";
@@ -95,6 +96,9 @@ export const mainExtensions = [
   Underline,
   LinkExtension.configure({
     openOnClick: false,
+  }),
+  LinkInternal.configure({
+    
   }),
   Superscript,
   SubScript,

@@ -30,6 +30,7 @@ import {
   Attachment,
   Drawio,
   Excalidraw,
+  LinkInternal,
 } from '@docmost/editor-ext';
 import { generateText, JSONContent } from '@tiptap/core';
 import { generateHTML } from '../common/helpers/prosemirror/html';
@@ -72,6 +73,7 @@ export const tiptapExtensions = [
   CustomCodeBlock,
   Drawio,
   Excalidraw,
+  LinkInternal,
 ] as any;
 
 export function jsonToHtml(tiptapJson: any) {

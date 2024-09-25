@@ -1,5 +1,5 @@
 import "@/features/editor/styles/index.css";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { Document } from "@tiptap/extension-document";
 import { Heading } from "@tiptap/extension-heading";
@@ -11,7 +11,6 @@ import {
   titleEditorAtom,
 } from "@/features/editor/atoms/editor-atoms";
 import {
-  usePageQuery,
   useUpdatePageMutation,
 } from "@/features/page/queries/page-query";
 import { useDebouncedValue } from "@mantine/hooks";
@@ -21,7 +20,7 @@ import { updateTreeNodeName } from "@/features/page/tree/utils";
 import { useQueryEmit } from "@/features/websocket/use-query-emit.ts";
 import { History } from "@tiptap/extension-history";
 import { buildPageUrl } from "@/features/page/page.utils.ts";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export interface TitleEditorProps {
   pageId: string;

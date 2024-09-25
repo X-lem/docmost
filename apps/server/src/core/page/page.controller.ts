@@ -12,7 +12,12 @@ import { PageService } from './services/page.service';
 import { CreatePageDto } from './dto/create-page.dto';
 import { UpdatePageDto } from './dto/update-page.dto';
 import { MovePageDto } from './dto/move-page.dto';
-import { PageHistoryIdDto, PageIdDto, PageInfoDto } from './dto/page.dto';
+import {
+  PageHistoryIdDto,
+  PageIdDto,
+  PageInfoDto,
+  SpaceIdDto,
+} from './dto/page.dto';
 import { PageHistoryService } from './services/page-history.service';
 import { AuthUser } from '../../common/decorators/auth-user.decorator';
 import { AuthWorkspace } from '../../common/decorators/auth-workspace.decorator';
@@ -55,6 +60,15 @@ export class PageController {
     }
 
     return page;
+  }
+
+  // Returns a list of all the page titles in a workspace/space that the user has access to
+  @HttpCode(HttpStatus.OK)
+  @Post('titles')
+  async getTitles(@Body() spaceIdDto: SpaceIdDto) {
+    let pages = await this.pageRepo.getTitles(spaceIdDto.spaceId);
+
+    return pages;
   }
 
   @HttpCode(HttpStatus.OK)
