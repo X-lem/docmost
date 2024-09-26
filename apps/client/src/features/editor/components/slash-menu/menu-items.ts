@@ -18,6 +18,7 @@ import {
   IconTypography,
   IconMenu4,
   IconLink,
+  IconCalendar,
 } from "@tabler/icons-react";
 import {
   CommandProps,
@@ -355,6 +356,26 @@ const CommandGroups: SlashMenuGroupedItemsType = {
       icon: IconExcalidraw,
       command: ({ editor, range }: CommandProps) =>
         editor.chain().focus().deleteRange(range).setExcalidraw().run(),
+    },
+    {
+      title: "Date",
+      description: "Insert current date",
+      searchTerms: ["date", "today"],
+      icon: IconCalendar,
+      command: ({ editor, range }: CommandProps) => {
+        const currentDate = new Date().toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+
+        return editor
+          .chain()
+          .focus()
+          .deleteRange(range)
+          .insertContent(currentDate)
+          .run();
+      },
     },
   ],
 };
