@@ -10,7 +10,7 @@ import {
 import { PaginationOptions } from '@docmost/db/pagination/pagination-options';
 import { executeWithPagination } from '@docmost/db/pagination/pagination';
 import { validate as isValidUUID } from 'uuid';
-import { ExpressionBuilder } from 'kysely';
+import { ExpressionBuilder, sql } from 'kysely';
 import { DB } from '@docmost/db/types/db';
 import { jsonObjectFrom } from 'kysely/helpers/postgres';
 import { SpaceMemberRepo } from '@docmost/db/repos/space/space-member.repo';
@@ -163,17 +163,29 @@ export class PageRepo {
 
   // getTitles returns all of the page titles
   // Page titles in the given space are ordered first then by last updated date (desc).
-  // TODO: only retrieve titles the user has access too.
+  // TODO: only retrieve pages the user has access too.
   async getTitles(spaceId: string) {
     let query = this.db
       .selectFrom('pages')
-      .select(['id', 'slugId', 'title', 'icon'])
+      .leftJoin('spaces', 'pages.spaceId', 'spaces.id')
+      .select([
+        'pages.id',
+        'pages.slugId',
+        'pages.title',
+        'pages.icon',
+        'pages.spaceId',
+        'spaces.slug as spaceSlug',
+      ])
       .orderBy((eb) =>
         // Order by spaceId first
         eb.case().when(eb.ref('spaceId'), '=', spaceId).then(0).else(1).end(),
       )
-      .orderBy('updatedAt', 'desc');
+      .orderBy('pages.updatedAt', 'desc');
 
-    return query.execute();
+    const result = await query.execute();
+    return result.map((row) => ({
+      ...row,
+      space: { id: row.spaceId, slug: row.spaceSlug }, // Manually nest space name into the space object
+    }));
   }
 }

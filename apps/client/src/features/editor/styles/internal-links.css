@@ -1,0 +1,8 @@
+.internal-link-icon {
+  margin-right: 5px;
+}
+
+.internal-link {
+  text-decoration: underline !important;
+  color: var(--mantine-color-dark-0) !important;
+}

@@ -4,7 +4,7 @@ import tippy from "tippy.js";
 
 export function openPageMenu(
   spaceId: string,
-  onSelect: (selectedPageId: string) => void
+  onSelect: (selectedPageId: Partial<IPage>) => void
 ) {
   // Perform an API call to fetch the list of pages
   getPageTitles(spaceId) // Replace with your actual API endpoint
@@ -21,7 +21,7 @@ export function openPageMenu(
         pageDiv.textContent = page.title;
         pageDiv.classList.add("page-item");
         pageDiv.addEventListener("click", () => {
-          onSelect(page.id); // Pass the selected page to the callback
+          onSelect(page); // Pass the selected page to the callback
           pageModal.remove();
         });
         pageModal.appendChild(pageDiv);

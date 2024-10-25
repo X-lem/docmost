@@ -29,9 +29,10 @@ import { uploadVideoAction } from "@/features/editor/components/video/upload-vid
 import { uploadAttachmentAction } from "@/features/editor/components/attachment/upload-attachment-action.tsx";
 import IconExcalidraw from "@/components/icons/icon-excalidraw";
 import IconMermaid from "@/components/icons/icon-mermaid";
+import { IPage } from "@/features/page/types/page.types";
 import IconDrawio from "@/components/icons/icon-drawio";
 import { openPageMenu } from "./page-link-modal";
-import { getPageById } from "@/features/page/services/page-service";
+import { buildPageUrl } from "@/features/page/page.utils";
 
 const CommandGroups: SlashMenuGroupedItemsType = {
   basic: [
@@ -56,16 +57,19 @@ const CommandGroups: SlashMenuGroupedItemsType = {
       icon: IconLink,
       command: async ({ editor, range }: CommandProps) => {
         openPageMenu(
-          "0191ed20-3dc5-7a31-880e-fd6332aa5372", // TODO: get spaceId dynamically
-          (selectedPageId: string) => {
-            console.log("selectedPageId", selectedPageId);
+          "0191ed20-3dc5-7a31-880e-fd6332aa5372", // TODO: get current spaceId
+          (page: Partial<IPage>) => {
+            console.log("page", page);
             editor
               .chain()
               .focus()
               .deleteRange(range)
               .setLinkInternal({
-                pageId: selectedPageId,
-                getPageById: getPageById,
+                pageId: page.id,
+                slugId: page.slugId,
+                pageTitle: page.title,
+                pageIcon: page.icon,
+                url: buildPageUrl(page.space.slug, page.slugId, page.title),
               })
               .run();
           }

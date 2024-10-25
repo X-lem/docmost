@@ -12,12 +12,12 @@ const buildPageSlug = (pageSlugId: string, pageTitle?: string): string => {
 };
 
 export const buildPageUrl = (
-  spaceName: string,
+  spaceSlug: string | undefined,
   pageSlugId: string,
   pageTitle?: string,
 ): string => {
-  if (spaceName === undefined) {
+  if (spaceSlug === undefined) {
     return `/${buildPageSlug(pageSlugId, pageTitle)}`;
   }
-  return `/s/${spaceName}/${buildPageSlug(pageSlugId, pageTitle)}`;
+  return `/s/${spaceSlug}/${buildPageSlug(pageSlugId, pageTitle)}`;
 };
