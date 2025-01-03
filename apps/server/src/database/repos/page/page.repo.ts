@@ -163,7 +163,7 @@ export class PageRepo {
 
   // getTitles returns all of the page titles
   // Page titles in the given space are ordered first then by last updated date (desc).
-  // TODO: only retrieve pages the user has access too.
+  // TODO: get titles from other spaces where user has permissions
   async getTitles(spaceId: string) {
     let query = this.db
       .selectFrom('pages')
@@ -176,8 +176,9 @@ export class PageRepo {
         'pages.spaceId',
         'spaces.slug as spaceSlug',
       ])
+      .where('pages.spaceId', '=', spaceId)
       .orderBy((eb) =>
-        // Order by spaceId first
+        // Order by current spaceId first (we'll want this when we allow linking to other spaces)
         eb.case().when(eb.ref('spaceId'), '=', spaceId).then(0).else(1).end(),
       )
       .orderBy('pages.updatedAt', 'desc');
@@ -187,5 +188,31 @@ export class PageRepo {
       ...row,
       space: { id: row.spaceId, slug: row.spaceSlug }, // Manually nest space name into the space object
     }));
+  }
+  async getPageAndDescendants(parentPageId: string) {
+    return this.db
+      .withRecursive('page_hierarchy', (db) =>
+        db
+          .selectFrom('pages')
+          .select(['id', 'slugId', 'title', 'icon', 'content', 'parentPageId', 'spaceId'])
+          .where('id', '=', parentPageId)
+          .unionAll((exp) =>
+            exp
+              .selectFrom('pages as p')
+              .select([
+                'p.id',
+                'p.slugId',
+                'p.title',
+                'p.icon',
+                'p.content',
+                'p.parentPageId',
+                'p.spaceId',
+              ])
+              .innerJoin('page_hierarchy as ph', 'p.parentPageId', 'ph.id'),
+          ),
+      )
+      .selectFrom('page_hierarchy')
+      .selectAll()
+      .execute();
   }
 }

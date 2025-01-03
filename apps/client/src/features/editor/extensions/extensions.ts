@@ -36,6 +36,7 @@ import {
   LinkInternal,
   Drawio,
   Excalidraw,
+  Embed
 } from "@docmost/editor-ext";
 import {
   randomElement,
@@ -54,6 +55,7 @@ import AttachmentView from "@/features/editor/components/attachment/attachment-v
 import CodeBlockView from "@/features/editor/components/code-block/code-block-view.tsx";
 import DrawioView from "../components/drawio/drawio-view";
 import ExcalidrawView from "@/features/editor/components/excalidraw/excalidraw-view.tsx";
+import EmbedView from "@/features/editor/components/embed/embed-view.tsx";
 import plaintext from "highlight.js/lib/languages/plaintext";
 import powershell from "highlight.js/lib/languages/powershell";
 import elixir from "highlight.js/lib/languages/elixir";
@@ -153,6 +155,7 @@ export const mainExtensions = [
   DetailsSummary,
   DetailsContent,
   Youtube.configure({
+    addPasteHandler: false,
     controls: true,
     nocookie: true,
   }),
@@ -183,6 +186,9 @@ export const mainExtensions = [
   Excalidraw.configure({
     view: ExcalidrawView,
   }),
+  Embed.configure({
+    view: EmbedView,
+  })
 ] as any;
 
 type CollabExtensions = (provider: HocuspocusProvider, user: IUser) => any[];

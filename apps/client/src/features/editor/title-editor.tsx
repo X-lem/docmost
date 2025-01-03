@@ -38,14 +38,18 @@ export function TitleEditor({
   editable,
 }: TitleEditorProps) {
   const [debouncedTitleState, setDebouncedTitleState] = useState(null);
-  const [debouncedTitle] = useDebouncedValue(debouncedTitleState, 1000);
-  const updatePageMutation = useUpdatePageMutation();
+  const [debouncedTitle] = useDebouncedValue(debouncedTitleState, 500);
+  const {
+    data: updatedPageData,
+    mutate: updatePageMutation,
+    status,
+  } = useUpdatePageMutation();
   const pageEditor = useAtomValue(pageEditorAtom);
   const [, setTitleEditor] = useAtom(titleEditorAtom);
   const [treeData, setTreeData] = useAtom(treeDataAtom);
   const emit = useQueryEmit();
-
   const navigate = useNavigate();
+  const [activePageId, setActivePageId] = useState(pageId);
 
   const titleEditor = useEditor({
     extensions: [
@@ -73,6 +77,7 @@ export function TitleEditor({
     onUpdate({ editor }) {
       const currentTitle = editor.getText();
       setDebouncedTitleState(currentTitle);
+      setActivePageId(pageId);
     },
     editable: editable,
     content: title,
@@ -84,25 +89,30 @@ export function TitleEditor({
   }, [title]);
 
   useEffect(() => {
-    if (debouncedTitle !== null) {
-      updatePageMutation.mutate({
+    if (debouncedTitle !== null && activePageId === pageId) {
+      updatePageMutation({
         pageId: pageId,
         title: debouncedTitle,
       });
+    }
+  }, [debouncedTitle]);
+
+  useEffect(() => {
+    if (status === "success" && updatedPageData) {
+      const newTreeData = updateTreeNodeName(treeData, pageId, debouncedTitle);
+      setTreeData(newTreeData);
 
       setTimeout(() => {
         emit({
           operation: "updateOne",
+          spaceId: updatedPageData.spaceId,
           entity: ["pages"],
           id: pageId,
           payload: { title: debouncedTitle, slugId: slugId },
         });
       }, 50);
-
-      const newTreeData = updateTreeNodeName(treeData, pageId, debouncedTitle);
-      setTreeData(newTreeData);
     }
-  }, [debouncedTitle]);
+  }, [updatedPageData, status]);
 
   useEffect(() => {
     if (titleEditor && title !== titleEditor.getText()) {

@@ -31,13 +31,15 @@ import {
   Drawio,
   Excalidraw,
   LinkInternal,
+  Embed,
 } from '@docmost/editor-ext';
-import { generateText, JSONContent } from '@tiptap/core';
+import { generateText, getSchema, JSONContent } from '@tiptap/core';
 import { generateHTML } from '../common/helpers/prosemirror/html';
 // @tiptap/html library works best for generating prosemirror json state but not HTML
 // see: https://github.com/ueberdosis/tiptap/issues/5352
 // see:https://github.com/ueberdosis/tiptap/issues/4089
 import { generateJSON } from '@tiptap/html';
+import { Node } from '@tiptap/pm/model';
 
 export const tiptapExtensions = [
   StarterKit.configure({
@@ -74,6 +76,7 @@ export const tiptapExtensions = [
   Drawio,
   Excalidraw,
   LinkInternal,
+  Embed,
 ] as any;
 
 export function jsonToHtml(tiptapJson: any) {
@@ -86,6 +89,10 @@ export function htmlToJson(html: string) {
 
 export function jsonToText(tiptapJson: JSONContent) {
   return generateText(tiptapJson, tiptapExtensions);
+}
+
+export function jsonToNode(tiptapJson: JSONContent) {
+  return Node.fromJSON(getSchema(tiptapExtensions), tiptapJson);
 }
 
 export function getPageId(documentName: string) {
