@@ -62,7 +62,7 @@ export class PageController {
     return page;
   }
 
-  // Returns a list of all the page titles in a workspace/space that the user has access to
+  // Returns a list of all the page titles in the given workspace
   @HttpCode(HttpStatus.OK)
   @Post('titles')
   async getTitles(@Body() spaceIdDto: SpaceIdDto) {

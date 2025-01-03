@@ -6,8 +6,8 @@ export function openPageMenu(
   spaceId: string,
   onSelect: (selectedPageId: Partial<IPage>) => void
 ) {
-  // Perform an API call to fetch the list of pages
-  getPageTitles(spaceId) // Replace with your actual API endpoint
+  // Perform an API call to fetch the list of page titles in given space
+  getPageTitles(spaceId)
     .then((pages) => {
       console.log("pages", pages);
 

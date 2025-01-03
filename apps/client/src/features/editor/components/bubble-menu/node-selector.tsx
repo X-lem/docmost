@@ -8,14 +8,12 @@ import {
   IconH1,
   IconH2,
   IconH3,
-  IconLink,
   IconList,
   IconListNumbers,
   IconTypography,
 } from "@tabler/icons-react";
 import { Popover, Button, ScrollArea } from "@mantine/core";
 import { useEditor } from "@tiptap/react";
-import { getPageTitles } from "@/features/page/services/page-service";
 
 interface NodeSelectorProps {
   editor: ReturnType<typeof useEditor>;
@@ -99,22 +97,6 @@ export const NodeSelector: FC<NodeSelectorProps> = ({
       icon: IconCode,
       command: () => editor.chain().focus().toggleCodeBlock().run(),
       isActive: () => editor.isActive("codeBlock"),
-    },
-    {
-      name: "Link to page",
-      icon: IconLink,
-      command: () => {
-        console.log("testing")
-        // editor
-        //   .chain()
-        //   .focus()
-        //   .setLink({
-        //     href: "http://localhost:5173/s/general/p/test-E3JN5zRvss",
-        //   })
-        //   .run();
-        getPageTitles()
-      },
-      isActive: () => editor.isActive("link"),
     },
   ];
 

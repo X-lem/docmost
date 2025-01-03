@@ -66,6 +66,7 @@ const CommandGroups: SlashMenuGroupedItemsType = {
       searchTerms: ["link", "internal link", "page"],
       icon: IconLink,
       command: async ({ editor, range }: CommandProps) => {
+        console.log("re", range, editor)
         openPageMenu(
           "0191ed20-3dc5-7a31-880e-fd6332aa5372", // TODO: get current spaceId
           (page: Partial<IPage>) => {
