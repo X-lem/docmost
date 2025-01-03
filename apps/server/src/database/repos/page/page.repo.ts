@@ -161,6 +161,34 @@ export class PageRepo {
     ).as('space');
   }
 
+  // getTitles returns all of the page titles
+  // Page titles in the given space are ordered first then by last updated date (desc).
+  // TODO: get titles from other spaces where user has permissions
+  async getTitles(spaceId: string) {
+    let query = this.db
+      .selectFrom('pages')
+      .leftJoin('spaces', 'pages.spaceId', 'spaces.id')
+      .select([
+        'pages.id',
+        'pages.slugId',
+        'pages.title',
+        'pages.icon',
+        'pages.spaceId',
+        'spaces.slug as spaceSlug',
+      ])
+      .where('pages.spaceId', '=', spaceId)
+      .orderBy((eb) =>
+        // Order by current spaceId first (we'll want this when we allow linking to other spaces)
+        eb.case().when(eb.ref('spaceId'), '=', spaceId).then(0).else(1).end(),
+      )
+      .orderBy('pages.updatedAt', 'desc');
+
+    const result = await query.execute();
+    return result.map((row) => ({
+      ...row,
+      space: { id: row.spaceId, slug: row.spaceSlug }, // Manually nest space name into the space object
+    }));
+  }
   async getPageAndDescendants(parentPageId: string) {
     return this.db
       .withRecursive('page_hierarchy', (db) =>

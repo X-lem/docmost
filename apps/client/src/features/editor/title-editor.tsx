@@ -1,5 +1,5 @@
 import "@/features/editor/styles/index.css";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { Document } from "@tiptap/extension-document";
 import { Heading } from "@tiptap/extension-heading";
@@ -10,7 +10,9 @@ import {
   pageEditorAtom,
   titleEditorAtom,
 } from "@/features/editor/atoms/editor-atoms";
-import { useUpdatePageMutation } from "@/features/page/queries/page-query";
+import {
+  useUpdatePageMutation,
+} from "@/features/page/queries/page-query";
 import { useDebouncedValue } from "@mantine/hooks";
 import { useAtom } from "jotai";
 import { treeDataAtom } from "@/features/page/tree/atoms/tree-data-atom";

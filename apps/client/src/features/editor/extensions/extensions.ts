@@ -33,6 +33,7 @@ import {
   Selection,
   Attachment,
   CustomCodeBlock,
+  LinkInternal,
   Drawio,
   Excalidraw,
   Embed
@@ -114,6 +115,9 @@ export const mainExtensions = [
   Underline,
   LinkExtension.configure({
     openOnClick: false,
+  }),
+  LinkInternal.configure({
+    
   }),
   Superscript,
   SubScript,

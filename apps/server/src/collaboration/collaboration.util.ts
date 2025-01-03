@@ -30,6 +30,7 @@ import {
   Attachment,
   Drawio,
   Excalidraw,
+  LinkInternal,
   Embed,
 } from '@docmost/editor-ext';
 import { generateText, getSchema, JSONContent } from '@tiptap/core';
@@ -74,6 +75,7 @@ export const tiptapExtensions = [
   CustomCodeBlock,
   Drawio,
   Excalidraw,
+  LinkInternal,
   Embed,
 ] as any;
 
